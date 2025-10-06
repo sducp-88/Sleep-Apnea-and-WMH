@@ -64,4 +64,3 @@ Visiting Research Fellow, Mayo Clinic
 Neurologist, Second Hospital of Shandong University
 Email: Cheng.Peng@Mayo.edu | sducp@email.sdu.edu.cn
 
-Changelog: 2025‑10‑06 — Initial public README for WMH_Analysis_pub.ipynb (main + short‑interval change only).
