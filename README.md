@@ -30,9 +30,9 @@ Install:
 pip install pandas numpy statsmodels scipy matplotlib seaborn scikit‑learn patsy python‑docx openpyxl graphviz pillow tqdm
 
 5) How to run
- 1. Place your working CSV and withdrawn list in the project directory.
- 2. Launch Jupyter: jupyter lab
- 3. Open WMH_Analysis_pub.ipynb and execute cells top‑to‑bottom.
+ (1). Place your working CSV and withdrawn list in the project directory.
+ (2). Launch Jupyter: jupyter lab
+ (3). Open WMH_Analysis_pub.ipynb and execute cells top‑to‑bottom.
 To run as a script:
 jupyter nbconvert --to script WMH_Analysis_pub.ipynb
 python WMH_Analysis_pub.py
