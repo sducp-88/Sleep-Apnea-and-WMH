@@ -62,6 +62,6 @@ Use an open‑source license such as MIT, Apache‑2.0, or CC‑BY‑4.0.
 Peng Cheng, MD
 Visiting Research Fellow, Mayo Clinic
 Neurologist, Second Hospital of Shandong University
-Email: Cheng.Peng@Mayo.edu
+Email: Cheng.Peng@Mayo.edu | sducp@email.sdu.edu.cn
 
 Changelog: 2025‑10‑06 — Initial public README for WMH_Analysis_pub.ipynb (main + short‑interval change only).
