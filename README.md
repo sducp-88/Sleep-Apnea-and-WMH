@@ -182,7 +182,8 @@ Generated data, figures, Word documents, and binary genetics intermediates are i
 
 Cheng P, et al. *Sleep Apnea and White Matter Hyperintensities in the UK Biobank: Cross-Sectional Association and Short-Interval Change.* 2025 (manuscript in submission).
 
-**UK Biobank acknowledgment:** This research was conducted using the UK Biobank resource (Application XXXX).
+P.Cheng, D. Z.Carvalho, S.Karim, A.Chahal, and V. K.Somers, “White Matter Hyperintensity Burden and Short-Interval Change Associated With Sleep Apnoea in the UK Biobank,” Annals of Clinical and Translational Neurology (2026): 1–12, https://doi.org/10.1002/acn3.70393.
+
 
 ---
 
