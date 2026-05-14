@@ -1,0 +1,28 @@
+# Python caches and virtual environments
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Jupyter runtime artifacts
+.ipynb_checkpoints/
+
+# Local UK Biobank data / generated analysis artifacts
+*.csv
+*.xlsx
+*.docx
+*.png
+*.pdf
+*.svg
+*.tif
+*.tiff
+*.bgen
+*.bgi
+*.sample
+*.pgen
+*.pvar
+*.psam
+*.raw
+
+# Keep repository-maintained metadata/examples if added later.
+!requirements.txt

@@ -1,0 +1,16 @@
+pandas
+numpy
+statsmodels
+scipy
+matplotlib
+seaborn
+scikit-learn
+patsy
+python-docx
+openpyxl
+graphviz
+pillow
+tqdm
+lifelines
+gseapy
+networkx
