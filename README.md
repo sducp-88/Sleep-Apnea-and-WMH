@@ -1,135 +1,201 @@
-## **WMH Analysis (UK Biobank) — Main Cross-Sectional & Short-Interval Change**
+# WMH Analysis (UK Biobank) — Main Cross-Sectional & Short-Interval Change
 
-Public, reproducible code for the primary analyses of the UK Biobank project on sleep-apnea–related differences in white-matter hyperintensities (WMH).  
-This notebook consolidates the main cross-sectional models and the exploratory short-interval longitudinal analyses.  
-Extra models (e.g., extended adjustment sets, mediation, effect-modification) have been removed from this public version.
+Public, reproducible code for the UK Biobank project on sleep-apnea–related differences in white-matter hyperintensities (WMH). The repository keeps the original end-to-end notebook and now also provides an ordered script layout so analyses can be reviewed, run, or modified step by step without removing notebook functionality.
 
 ---
 
-### **1) What this repository contains**
+## 1) Repository structure
 
-**WMH_Analysis_pub.ipynb** — single, publication-ready notebook that:
-
-- Removes UK Biobank withdrawn-consent participants from the working dataset.  
-- Performs cleaning & final dataset preparation (variable derivation, date harmonization, sample flow logging).  
-- Provides a matching / ATO weighting scaffold (logistic PS with sklearn + balance reports) to support the main matched cohorts.  
-- Runs WMH transformation diagnostics (raw vs. log1p(raw × volumetric_scaling_factor), normality and heteroscedasticity checks, AIC comparisons).  
-- Fits primary cross-sectional OLS models (head-size–normalized WMH, log1p scale) using a prespecified covariate set; exports publication-grade tables and figures.  
-- Implements the short-interval change analysis (I3–I2): annualized slopes and increase/decrease proportions, with supporting visualizations.  
-- Generates figure legends, eMethods snippets, and package version prints for reproducibility.  
-- **[NEW IN THIS UPDATE]** Adds automated FDR correction (Benjamini–Hochberg) for PWMH/DWMH families; fixes logging of sample counts within each stratum; updates visualization scripts for forest and bar-type plots; and improves compatibility with head-size normalization pipelines.  
-- **[NEW FILE]** `run_apoe.sh` — Bash script used on **UK Biobank RAP** (Research Analysis Platform) to extract APOE genotypes (rs429358, rs7412) from BGEN/VCF files.  
-  The script supports parallelized `bgenix`/`qctool` workflows and outputs a clean CSV file with `eid`, `APOE_e2e3e4` status, and genotype counts for downstream linkage to phenotype tables.
-
----
-
-### **2) Data & privacy**
-
-UK Biobank data are **not distributed** in this repository.  
-You must have an approved UKB application and access to the corresponding data fields.  
-The notebook expects a working CSV with required variables and uses a UKB withdrawn-consent list (e.g., `w48286_YYYYMMDD.csv`) to remove participants.  
-Any sharing must comply with **UKB’s Material Transfer and Data Access Policies**.
-
----
-
-### **3) Required inputs (typical)**
-
-- **Working analysis dataset:** e.g., `data_processed.csv`, containing at least:
-  participant identifier, `treatment_var`, `match_id`, WMH raw volumes, volumetric scaling factor, covariates, and dates for longitudinal subset.  
-- **Withdrawn list:** e.g., `w48286_YYYYMMDD.csv`.  
-- If variable names differ, adapt the **CONFIG** section in the notebook.
-
----
-
-### **4) Environment**
-
-- **Python ≥ 3.9**  
-- **Core packages:** `pandas`, `numpy`, `statsmodels`, `scipy`, `matplotlib`, `seaborn`, `scikit-learn`, `patsy`  
-- **Docs/figures:** `python-docx`, `openpyxl`, `graphviz`, `pillow`, `tqdm`
-
-**Install:**
-```bash
-pip install pandas numpy statsmodels scipy matplotlib seaborn scikit-learn patsy python-docx openpyxl graphviz pillow tqdm
+```text
+.
+├── WMH_Analysis.ipynb              # Original end-to-end analysis notebook
+├── README.md                       # Project overview and run instructions
+├── requirements.txt                # Python package list used by the analysis
+├── run_apoe.sh                     # APOE extraction script for UKB RAP
+├── docs/
+│   └── analysis_pipeline.md        # Detailed map of notebook cells to scripts
+└── scripts/
+    ├── export_notebook_steps.py    # Regenerate scripts from WMH_Analysis.ipynb
+    ├── run_notebook_steps.sh       # Sequential runner for exported notebook steps
+    └── notebook_steps/             # 17 ordered Python scripts exported from the notebook
 ```
 
+See [`docs/analysis_pipeline.md`](docs/analysis_pipeline.md) for the full step-by-step script map.
+
+
 ---
 
-### **5) How to run**
+## New-user note: do you need to download anything manually?
 
-1. Place your working CSV and withdrawn list in the project directory.  
-2. Launch Jupyter:
-   ```bash
-   jupyter lab
-   ```
-3. Open **WMH_Analysis_pub.ipynb** and execute cells top-to-bottom.  
+No. If you are reviewing this repository in the same Git branch or pull request where these changes were made, the files have already been added directly to the codebase. You do **not** need to manually copy or download separate files from the chat.
 
-To run as a script:
+For beginners, the practical workflow is:
+
+1. Open the repository after the pull request/commit is applied.
+2. Use `WMH_Analysis.ipynb` if you prefer the familiar Jupyter notebook interface.
+3. Use `scripts/notebook_steps/` if you want to see the same notebook code split into ordered Python files.
+4. If you edit `WMH_Analysis.ipynb`, run `python scripts/export_notebook_steps.py` to refresh the ordered scripts.
+5. If you want to run the ordered scripts, run `bash scripts/run_notebook_steps.sh` from the repository root.
+
+In other words: I can directly change files in this working repository during this coding session, then commit those changes. You only need to pull/merge the branch or PR in your own local copy if you are viewing the project somewhere else, such as GitHub or another computer.
+
+---
+
+## 2) What this repository contains
+
+`WMH_Analysis.ipynb` and the corresponding scripts in `scripts/notebook_steps/` cover the following analysis stages:
+
+- Generates the study flowchart.
+- Removes UK Biobank withdrawn-consent participants from the working dataset.
+- Performs cleaning and final dataset preparation, including variable derivation, date harmonization, sample-flow logging, and documentation outputs.
+- Provides propensity-score matching and ATO-weighting code with balance reports.
+- Runs WMH transformation diagnostics comparing raw and `log1p(raw × volumetric_scaling_factor)` outcomes.
+- Fits primary and sensitivity cross-sectional OLS models for head-size-normalized WMH.
+- Runs cognitive secondary outcomes, mediation analyses, stratified analyses, interaction analyses, and additional sensitivity analyses.
+- Implements short-interval longitudinal WMH change analyses.
+- Generates figure legends, eMethods snippets, diagnostics tables, publication-grade figures/tables, and package-version prints for reproducibility.
+- Includes `run_apoe.sh`, a Bash script for UK Biobank RAP APOE genotype extraction from BGEN/VCF-derived inputs.
+
+---
+
+## 3) Data and privacy
+
+UK Biobank data are **not distributed** in this repository. You must have an approved UKB application and access to the corresponding data fields. The code expects a working analysis CSV and a UKB withdrawn-consent list, such as `w48286_YYYYMMDD.csv`, to remove participants before analysis.
+
+Any sharing or downstream processing must comply with UK Biobank Material Transfer and Data Access Policies.
+
+---
+
+## 4) Required inputs (typical)
+
+Typical inputs include:
+
+- A working analysis dataset, such as `data20250415.csv` or `data_processed.csv`, with participant identifiers, `treatment_var`, `match_id`, WMH raw volumes, volumetric scaling factor, covariates, and longitudinal dates where applicable.
+- A withdrawn-consent list, such as `w48286_YYYYMMDD.csv`.
+- Matched or derived cohort files generated by earlier steps, such as `primary_cohort.csv` and `sensitivity_cohort.csv`, for downstream modeling steps.
+
+If variable names differ, edit the CONFIG section in the relevant notebook cell or exported script.
+
+---
+
+## 5) Environment
+
+Recommended Python version: **Python ≥ 3.9**.
+
+Install the Python dependencies with:
+
 ```bash
-jupyter nbconvert --to script WMH_Analysis_pub.ipynb
-python WMH_Analysis_pub.py
+pip install -r requirements.txt
 ```
 
-To extract APOE genotypes on UKB-RAP:
+Core packages include `pandas`, `numpy`, `statsmodels`, `scipy`, `matplotlib`, `seaborn`, `scikit-learn`, `patsy`, `python-docx`, `openpyxl`, `graphviz`, `pillow`, and `tqdm`.
+
+---
+
+## 6) How to run
+
+### Option A — Run the original notebook
+
+```bash
+jupyter lab
+```
+
+Open `WMH_Analysis.ipynb` and execute cells from top to bottom.
+
+### Option B — Regenerate exported scripts after notebook edits
+
+If you change `WMH_Analysis.ipynb`, refresh the structured scripts with:
+
+```bash
+python scripts/export_notebook_steps.py
+```
+
+### Option C — Run all exported scripts
+
+From the repository root:
+
+```bash
+bash scripts/run_notebook_steps.sh
+```
+
+### Option D — Run only selected exported steps
+
+For example, to run steps 3 through 6:
+
+```bash
+START_STEP=3 END_STEP=6 bash scripts/run_notebook_steps.sh
+```
+
+### Option E — Convert the notebook manually
+
+```bash
+jupyter nbconvert --to script WMH_Analysis.ipynb
+python WMH_Analysis.py
+```
+
+### APOE extraction on UKB RAP
+
 ```bash
 bash run_apoe.sh
 ```
 
 ---
 
-### **6) Statistical design**
+## 7) Statistical design
 
-- **Cross-sectional:** log1p(head-size–normalized WMH); OLS with cluster-robust SEs.  
-- **Short-interval change:** annualized slope & proportion increase; LOESS and bar-type plots.  
-- **BH-FDR** applied to PWMH/DWMH families.
-
----
-
-### **7) Key outputs**
-
-`OLS_Results_Manuscript_Table.csv/.docx`,  
-`Forest_HSN_LogPct.png`,  
-`Diagnostics_raw_vs_log1p.csv`,  
-`Hist_*.png`, `QQ_*.png`,  
-`FigureX_Longitudinal_WMH.png`,  
-`Derived_Variables_UKB.csv`,  
-`Sample_Flow.txt`,  
-`PSM_Summary.txt`,  
-and `APOE_Genotypes.csv` (from `run_apoe.sh`).
+- **Cross-sectional models:** `log1p(head-size-normalized WMH)` with OLS and robust or cluster-robust standard errors where implemented.
+- **Short-interval change models:** annualized slopes and increase/decrease proportions.
+- **Multiple testing:** Benjamini–Hochberg FDR correction for PWMH/DWMH families where specified; Total WMH is treated as the primary outcome in the relevant modules.
 
 ---
 
-### **8) Reproducibility notes**
+## 8) Key outputs
 
-Withdrawn-consent removal is mandatory.  
-Logs all derived and dropped variables.  
-Final cell prints package versions for reproducibility.
+Depending on the step, expected outputs include:
+
+- `data.csv`, `data_processed.csv`
+- `Derived_Variables_UKB.csv`, `Sample_Flow.txt`
+- `primary_cohort.csv`, `sensitivity_cohort.csv`, stratified cohort files
+- `PSM_Summary.txt`, balance tables, Love plots
+- `Diagnostics_raw_vs_log1p.csv`, histogram/QQ/residual diagnostic plots
+- `OLS_Results_Manuscript_Table.csv/.docx`
+- `Forest_HSN_LogPct.png` and related figure formats
+- `FigureX_Longitudinal_WMH.*`
+- Stratified and interaction result tables under their output folders
+- `APOE_calls.csv` from `run_apoe.sh`
+
+Generated data, figures, Word documents, and binary genetics intermediates are ignored by Git to avoid committing private or bulky artifacts.
 
 ---
 
-### **9) Customization**
+## 9) Reproducibility notes
 
-Edit the **CONFIG** block for variable names and file paths.  
-Modify inclusion/exclusion criteria as needed.  
-Figures are exported in PNG/PDF/SVG/TIFF (600 dpi, LZW compression).
+- Withdrawn-consent removal is mandatory before analysis.
+- The notebook and exported scripts preserve the same ordered workflow.
+- `scripts/export_notebook_steps.py` is the synchronization command that makes notebook edits visible in `scripts/notebook_steps/`.
+- `scripts/run_notebook_steps.sh` changes into the repository root before execution so notebook-style relative paths resolve consistently.
+- The final package-version step records the software environment used for the analysis.
 
 ---
 
-### **10) Citation**
+## 10) Citation
+
+Cheng P, et al. *Sleep Apnea and White Matter Hyperintensities in the UK Biobank: Cross-Sectional Association and Short-Interval Change.* 2025 (manuscript in submission).
 
 P.Cheng, D. Z.Carvalho, S.Karim, A.Chahal, and V. K.Somers, “White Matter Hyperintensity Burden and Short-Interval Change Associated With Sleep Apnoea in the UK Biobank,” Annals of Clinical and Translational Neurology (2026): 1–12, https://doi.org/10.1002/acn3.70393.
 
 
 ---
 
-### **11) License**
+## 11) License
 
 Use an open-source license such as **MIT**, **Apache-2.0**, or **CC-BY-4.0**.
 
 ---
 
-### **12) Contact**
+## 12) Contact
 
 **Peng Cheng, MD**  
 Visiting Research Fellow, Mayo Clinic  
 Neurologist, Second Hospital of Shandong University  
-📧 Cheng.Peng@Mayo.edu | sducp@email.sdu.edu.cn  
+Cheng.Peng@Mayo.edu | sducp@email.sdu.edu.cn
